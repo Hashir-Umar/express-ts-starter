@@ -1,0 +1,36 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: api
+    ports:
+      - 9001:9001
+      - 9229:9229
+    volumes:
+      - ./:/usr/src/api
+      - /usr/src/api/node_modules
+    depends_on:
+      - mongodb
+    networks:
+      - apinetwork
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27092:27017
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+    networks:
+      - apinetwork
+
+volumes:
+  mongodb:
+  mongodb_config:
+
+
+networks:
+  apinetwork:
